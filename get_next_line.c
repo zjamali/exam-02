@@ -1,8 +1,7 @@
-#include "unistd.h"
-#include "stdlib.h"
-#include "stdio.h"
+#include "get_next_line.h"
 
 int get_next_line(char **line);
+
 int main(void) {
   int r;
   char *line;
@@ -17,6 +16,7 @@ int main(void) {
   free(line);
   line = NULL;
 }
+
 size_t ft_strlen(char *str)
 {
 	int i = 0;
@@ -54,6 +54,7 @@ char *ft_substr(char *str,int start,int end)
 	sub[i] = '\0';
 	return sub;
 }
+
 char *ft_strjoin(char *str1, char *str2)
 {
 	if (str1 == NULL)
@@ -96,11 +97,15 @@ int ft_strchr(char *str,int c)
 
 int get_next_line(char **line)
 {
-	char buff[101];
+	char *buff;
 	static char *str;
 	char *tmp;
 	int r;
 	int i = 0;
+	
+	if (!line)
+		return -1;
+	buff = malloc(101);
 	while((r = read(0,buff,100)) > 0)
 	{
 		buff[r] = '\0';
@@ -110,9 +115,10 @@ int get_next_line(char **line)
 		if (ft_strchr(str,'\n'))
 			break;
 	}
+	free(buff);
 	if (r < 0)
 		return -1;
-	else if (!r && str == NULL)
+	else if (!r && (str == NULL || *str = '\0'))
 	{
 		*line = ft_strdup("");
 		return 0;
@@ -129,7 +135,7 @@ int get_next_line(char **line)
 			free(tmp);
 			return (1);
 		}
-		if (str[i] != '\0')
+		else if (str[i] != '\0')
 		{
 			*line = ft_strdup(str);
 			free(str);
